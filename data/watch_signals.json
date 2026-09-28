@@ -1,0 +1,10 @@
+[
+ {"keywords":["lump","mass","nodule"],"text":"The report mentions a lump, mass or nodule. Ask your doctor what type it is, its size, and whether it needs further tests."},
+ {"keywords":["suspicious","malignant","malignancy","carcinoma"],"text":"The report uses words that need quick specialist review. Do not wait: show it to a doctor soon."},
+ {"keywords":["abnormal cells","dysplasia","ascus","cin"],"text":"Abnormal cell changes were mentioned. Follow-up tests are usually needed. Ask when."},
+ {"keywords":["bleeding","menorrhagia","metrorrhagia"],"text":"Bleeding is mentioned. Note how heavy it is (pads per day) and for how many days, and tell your doctor."},
+ {"keywords":["cyst"],"text":"A cyst is mentioned. Ask its size and type, and when to repeat the scan."},
+ {"keywords":["fibroid","leiomyoma"],"text":"A fibroid is mentioned. Ask whether it needs treatment or only watching."},
+ {"keywords":["preeclampsia","pre-eclampsia","hypertension","gestational diabetes"],"text":"A pregnancy risk condition is mentioned. Attend every scheduled check-up and learn the warning signs."},
+ {"keywords":["ectopic"],"text":"Ectopic pregnancy is an emergency. Seek medical care immediately."}
+]

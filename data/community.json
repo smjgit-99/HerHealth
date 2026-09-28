@@ -1,0 +1,93 @@
+[
+ {
+  "id": "c0",
+  "alias": "Quiet_Warrior",
+  "condition": "Perimenopause",
+  "tag": "#Perimenopause",
+  "ago": "8h",
+  "likes": 31,
+  "comments": 12,
+  "title": "",
+  "story": "Nobody tells you perimenopause starts in your late 30s. The hot flashes, the mood swings, the brain fog. Glad I found this community. Would love to hear what worked for others with sleep issues.",
+  "tip": "",
+  "verified_by": "Doctor letter checked"
+ },
+ {
+  "id": "c1",
+  "alias": "Asha",
+  "condition": "PCOS",
+  "title": "Getting a diagnosis took two visits",
+  "story": "I had irregular periods for a year. The first doctor said it was stress. At a second visit, an ultrasound and hormone tests led to a PCOS diagnosis. Writing down my period dates helped the doctor a lot.",
+  "tip": "Track your period dates before your visit.",
+  "verified_by": "Diagnosis report checked",
+  "tag": "#PCOS",
+  "ago": "2d",
+  "likes": 24,
+  "comments": 9
+ },
+ {
+  "id": "c2",
+  "alias": "Neha",
+  "condition": "Anemia",
+  "title": "Tiredness I ignored for months",
+  "story": "I felt tired for months and thought it was normal. A blood test showed low hemoglobin. My doctor explained the cause and set a follow-up plan. Repeating the test later mattered.",
+  "tip": "Ask when your test should be repeated.",
+  "verified_by": "Lab report checked",
+  "tag": "#Anemia",
+  "ago": "1d",
+  "likes": 18,
+  "comments": 6
+ },
+ {
+  "id": "c3",
+  "alias": "Priya",
+  "condition": "Gestational diabetes",
+  "title": "Managing sugar in pregnancy",
+  "story": "I was told I had gestational diabetes at 26 weeks and I was scared. Diet counselling at my hospital made it easier. I was asked to test again after delivery.",
+  "tip": "Ask for a diet counselling session.",
+  "verified_by": "Doctor letter checked",
+  "tag": "#GestationalDiabetes",
+  "ago": "5h",
+  "likes": 42,
+  "comments": 15
+ },
+ {
+  "id": "c4",
+  "alias": "Sneha",
+  "condition": "Thyroid",
+  "title": "Understanding my TSH report",
+  "story": "I did not understand my report until my doctor explained what TSH means. Now I keep all reports in one folder and carry them to every visit.",
+  "tip": "Keep all reports together.",
+  "verified_by": "Lab report checked",
+  "tag": "#Thyroid",
+  "ago": "3d",
+  "likes": 15,
+  "comments": 4
+ },
+ {
+  "id": "c5",
+  "alias": "Kavya",
+  "condition": "Endometriosis",
+  "title": "Years of painful periods",
+  "story": "I lived with painful periods for years. What helped was writing down when pain happened and how bad it was, then showing my gynecologist.",
+  "tip": "Keep a simple pain diary.",
+  "verified_by": "Diagnosis report checked",
+  "tag": "#Endometriosis",
+  "ago": "12h",
+  "likes": 27,
+  "comments": 11
+ },
+ {
+  "id": "c6",
+  "alias": "Meera",
+  "condition": "Menopause",
+  "title": "Night sweats and sleep",
+  "story": "Night sweats kept waking me up. Talking to my doctor about my options, instead of just putting up with it, made a real difference.",
+  "tip": "Note your symptoms and how they affect your day.",
+  "verified_by": "Doctor letter checked",
+  "tag": "#Perimenopause",
+  "ago": "1d",
+  "likes": 33,
+  "comments": 14
+ }
+]

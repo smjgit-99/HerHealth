@@ -1,0 +1,54 @@
+{
+ "general":[
+  "What does each abnormal result mean for me, in simple words?",
+  "Do I need any repeat or extra tests? Which ones, and when?",
+  "What food, sleep and activity changes could help?",
+  "If you prescribe medicine: what is it for, how long, and what side effects should I watch for?",
+  "Which symptoms mean I should come back sooner or go to the emergency room?",
+  "When is my next follow-up visit?"
+ ],
+ "by_test":{
+  "hemoglobin":["What is causing my low hemoglobin: iron, B12, heavy periods, or something else?","Do I need a ferritin test or other blood tests?","Should I take iron tablets, and for how long?"],
+  "tsh":["Do I need T3, T4 or thyroid antibody tests to confirm?","Does this need treatment now, or should we repeat the test? When?"],
+  "fbs":["Is my sugar in the prediabetes or diabetes range? Do I need a repeat test or HbA1c?","How often should I check my blood sugar?"],
+  "hba1c":["What does my HbA1c mean, and when should it be repeated?","What food and activity changes do you suggest?"],
+  "ferritin":["My iron stores are low: what should I eat or take, and when should we recheck?","Could heavy periods be the cause?"],
+  "vitd":["How much vitamin D or sun exposure do you recommend, and for how long?","When should I retest?"],
+  "b12":["Do I need B12 tablets or injections? Which foods can help?","Could low B12 explain my tiredness or tingling?"],
+  "prolactin":["What could be raising my prolactin? Do I need a repeat test or a scan?","Could any medicine I take raise it?"],
+  "cholesterol":["Do I need a full lipid profile?","What diet and exercise changes do you advise?"]
+ },
+ "by_topic":{
+  "PCOS":{"keywords":["pcos","pcod","polycystic"],"questions":["How was PCOS confirmed, and which of my symptoms does it explain?","What do you suggest for my main concern: periods, acne, weight, or planning pregnancy?","Do I need regular checks for blood sugar and cholesterol?"]},
+  "Endometriosis":{"keywords":["endometriosis","endometrioma"],"questions":["How sure are we about endometriosis, and do I need a scan or other tests?","What are my options for managing pain?","How might this affect future pregnancy plans?"]},
+  "Fibroids":{"keywords":["fibroid","leiomyoma"],"questions":["How big is the fibroid and where is it?","Does it need treatment or only regular monitoring?","Could it be causing my heavy bleeding or pain?"]},
+  "Ovarian cyst":{"keywords":["ovarian cyst","cyst"],"questions":["What type of cyst is it, and what size?","Do I need a repeat scan? When?","Which symptoms mean I should come back sooner?"]},
+  "Thyroid":{"keywords":["thyroid","hypothyroidism","hyperthyroidism"],"questions":["How should I take thyroid medicine, and when should I retest?","Could my thyroid be affecting my periods or weight?"]},
+  "Pregnancy":{"keywords":["pregnan","antenatal","gestation","trimester"],"questions":["Are my tests and my baby's growth on track for this stage?","Which warning signs need urgent care?","Which medicines and supplements are safe for me now?"]},
+  "Menopause":{"keywords":["menopause","perimenopause"],"questions":["Are my symptoms due to menopause, or should other causes be checked?","What are the benefits and risks of each option for me?","Should I get a bone density test?"]},
+  "Breast health":{"keywords":["breast","mammogra"],"questions":["Is this finding benign, or does it need more tests such as a scan or biopsy?","When should my next screening be?","How should I check my breasts regularly?"]},
+  "Urinary infection":{"keywords":["urinary tract infection","uti"],"questions":["Do I need a urine culture?","How long should treatment last, and what if symptoms return?","How can I lower the chance of it coming back?"]}
+ },
+ "by_symptom":{
+  "Heavy periods":"How do I know if my bleeding is too heavy, and do I need blood tests or a scan?",
+  "Painful periods":"Could my period pain be from a condition that needs a scan or treatment?",
+  "Missed or irregular periods":"What could be causing my irregular periods, and which tests do I need?",
+  "Tiredness":"Could my tiredness be linked to iron, thyroid or vitamin levels?",
+  "Weight change":"Could hormones or my thyroid be involved in my weight change?",
+  "Acne or extra hair growth":"Could hormones be causing my acne or hair growth, and what are my options?",
+  "Hot flashes or night sweats":"Are these signs of perimenopause, and how can I manage them?",
+  "Breast lump or pain":"Do I need a breast examination or scan for this?",
+  "Burning while passing urine":"Do I need a urine test for infection?",
+  "Pelvic pain":"What could be causing my pelvic pain, and which tests will find out?",
+  "Trouble getting pregnant":"Which tests should we do first, and after how long should we test?"
+ },
+ "bring":[
+  "All past reports and prescriptions, in date order",
+  "A list of medicines and supplements you take now, with doses",
+  "Dates of your last 3 periods and how heavy they were",
+  "Your symptoms: when they started and what makes them better or worse",
+  "Your ID and hospital card",
+  "A family member or friend if you want support (optional)",
+  "This question list"
+ ]
+}
