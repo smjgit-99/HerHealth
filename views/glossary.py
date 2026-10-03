@@ -1,12 +1,10 @@
 import streamlit as st
 
-from modules import ui
 from modules.content import load_json
 from modules.translate import current_code, tr_list
 
 
 def render():
-    ui.page_header(*tr_list(["Medical Glossary", "Look up clinical terms and acronyms in plain language."]))
     g = load_json("glossary")
     code = current_code()
     q = st.text_input("Search a term or meaning", key="gl_q")

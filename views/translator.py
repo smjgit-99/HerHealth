@@ -1,6 +1,7 @@
 import streamlit as st
 
 from modules import ui
+from views import checklist
 from modules.analyzer import analyze
 from modules.content import load_text
 from modules.highlight import highlight_html
@@ -20,8 +21,7 @@ LABELS = ["What This Means", "What Is Normal", "Things to Watch", "Jargon found 
           "Download summary", "Original report", "Plain-language explanation",
           "No known lab values were found in this text.",
           "Ranges are general adult values. If your report prints a different range, follow the one on your report.",
-          "This is a simple explanation, not a diagnosis. Please discuss your report with a doctor.",
-          "Next step: open Checklist in the top menu."]
+          "This is a simple explanation, not a diagnosis. Please discuss your report with a doctor."]
 STATUS = ["Low", "Normal", "High", "Check unit"]
 
 
@@ -101,7 +101,6 @@ def _show():
     english = _summary(a, a["means"], a["watch"], a["questions"], "WOMEN'S HEALTH REPORT SUMMARY")
     doc = english if code == "en" else english + "\n\n===== TRANSLATION =====\n\n" + _summary(a, means, watch, qs, "SUMMARY")
     st.download_button(f"⬇️ {L['Download summary']}", doc, file_name="report_summary.txt", key="dl_summary")
-    st.info(L["Next step: open Checklist in the top menu."])
 
 
 def render():
@@ -131,3 +130,5 @@ def render():
 
     if "analysis" in st.session_state:
         _show()
+
+    checklist.render()

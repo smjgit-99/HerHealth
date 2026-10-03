@@ -3,6 +3,7 @@ import html
 import streamlit as st
 
 from modules import ui
+from views import relaxer
 from modules.content import load_json
 from modules.translate import tr_list
 
@@ -25,7 +26,8 @@ LABELS = ["Verified Peer Community", "Connect with others on similar health jour
           "Report received (demo): in the full version, a moderator reviews it and removes wrong claims.",
           "No posts with this tag yet. Write the first one above.",
           "How we keep it free of misinformation",
-          "In this demo these steps are described, not implemented. The stories below were written and reviewed by the team."]
+          "In this demo these steps are described, not implemented. The stories below were written and reviewed by the team.",
+          "Feeling anxious or overwhelmed? Take a one-minute breathing break."]
 RULES = [
     "Only people whose diagnosis is confirmed by a lab report or doctor letter can join. A moderator checks the document.",
     "Posts share experiences only. No medicine names, doses or treatment advice.",
@@ -74,6 +76,8 @@ def render():
     L = dict(zip(LABELS, tr_list(LABELS)))
     ui.page_header(L["Verified Peer Community"], L["Connect with others on similar health journeys."])
     ui.notice(L[LABELS[18]])
+    with st.expander(L[LABELS[24]], icon=":material/air:", expanded=bool(st.session_state.pop("open_calm", False))):
+        relaxer.render(embedded=True)
     _twins(L)
 
     posts = load_json("community")

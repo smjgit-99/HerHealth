@@ -41,9 +41,11 @@ def logo_tile(size: int = 38) -> str:
             f'{icon("heart", int(size * .55), "#fff", "#fff")}</span>')
 
 
-def go(page: str):
-    """Button callback: jump to another page."""
+def go(page: str, **state):
+    """Button callback: jump to another page. Extra keyword args are written to session state
+    (e.g. learn_tab="Glossary" picks the section, open_calm=True opens the breathing break)."""
     st.session_state["nav_page"] = page
+    st.session_state.update(state)
 
 
 def page_header(title: str, subtitle: str = ""):

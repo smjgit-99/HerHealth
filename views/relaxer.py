@@ -43,14 +43,15 @@ def _css(uid: str, phases) -> str:
             + "".join(label_css) + "</style>")
 
 
-def render():
+def render(embedded: bool = False):
     T = tr_list(LABELS + list(PATTERNS) + SCRIPT + [p[0] for v in PATTERNS.values() for p in v])
     L = dict(zip(LABELS, T[:len(LABELS)]))
     names = T[len(LABELS):len(LABELS) + len(PATTERNS)]
     script = T[len(LABELS) + len(PATTERNS):len(LABELS) + len(PATTERNS) + len(SCRIPT)]
     phase_tr = dict(zip([p[0] for v in PATTERNS.values() for p in v], T[len(LABELS) + len(PATTERNS) + len(SCRIPT):]))
 
-    ui.page_header(L["Mindful Relaxer"], L["Guided breathing and meditation to ease medical anxiety."])
+    if not embedded:
+        ui.page_header(L["Mindful Relaxer"], L["Guided breathing and meditation to ease medical anxiety."])
     choice = st.selectbox(L["Pick a rhythm"], list(range(len(PATTERNS))), format_func=lambda i: names[i], key="relax_pattern")  # noqa
     key = list(PATTERNS)[choice]
     phases = PATTERNS[key]

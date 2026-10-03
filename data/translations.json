@@ -394,7 +394,12 @@
 "Values outside the usual range usually need a repeat test or a check for the cause. Ask when to repeat them.": "सामान्य सीमा से बाहर के मानों के लिए आमतौर पर दोबारा जाँच या कारण की खोज चाहिए। पूछें कि कब दोहराएँ।",
 "Go to a doctor or emergency room quickly for very heavy bleeding, severe pain, fainting, fever with pain, or any bleeding in pregnancy.": "बहुत भारी रक्तस्राव, तेज़ दर्द, बेहोशी, दर्द के साथ बुखार, या गर्भावस्था में किसी भी रक्तस्राव पर तुरंत डॉक्टर या आपातकालीन कक्ष जाएँ।",
 "The lab values we could read are within the usual ranges. Your doctor will still look at them together with your symptoms.": "हम जो लैब मान पढ़ सके वे सामान्य सीमा के भीतर हैं। फिर भी आपके डॉक्टर उन्हें आपके लक्षणों के साथ देखेंगे।",
-"We could not find familiar terms or lab values in this text. Try pasting the findings or impression section, and check the file was read correctly.": "इस पाठ में हमें जाने-पहचाने शब्द या लैब मान नहीं मिले। निष्कर्ष या इम्प्रेशन वाला भाग पेस्ट करके देखें, और जाँचें कि फ़ाइल सही पढ़ी गई है।"
+"We could not find familiar terms or lab values in this text. Try pasting the findings or impression section, and check the file was read correctly.": "इस पाठ में हमें जाने-पहचाने शब्द या लैब मान नहीं मिले। निष्कर्ष या इम्प्रेशन वाला भाग पेस्ट करके देखें, और जाँचें कि फ़ाइल सही पढ़ी गई है।",
+"Home": "होम",
+"Learn": "सीखें",
+"Plain-language health guides and a glossary of medical terms.": "सरल भाषा में स्वास्थ्य गाइड और चिकित्सा शब्दों की शब्दावली।",
+"Next step: prepare for your doctor visit": "अगला कदम: डॉक्टर के पास जाने की तैयारी करें",
+"Feeling anxious or overwhelmed? Take a one-minute breathing break.": "घबराहट या बेचैनी हो रही है? एक मिनट साँस लेने का अभ्यास करें।"
 },
 "mr": {
 "Dashboard": "डॅशबोर्ड",
@@ -791,7 +796,12 @@
 "Values outside the usual range usually need a repeat test or a check for the cause. Ask when to repeat them.": "सामान्य मर्यादेबाहेरील मूल्यांसाठी सहसा पुन्हा चाचणी किंवा कारणाचा शोध लागतो. ती कधी पुन्हा करावी ते विचारा.",
 "Go to a doctor or emergency room quickly for very heavy bleeding, severe pain, fainting, fever with pain, or any bleeding in pregnancy.": "खूप जास्त रक्तस्राव, तीव्र वेदना, बेशुद्ध पडणे, वेदनेसह ताप, किंवा गर्भावस्थेत कोणताही रक्तस्राव झाल्यास लगेच डॉक्टरांकडे किंवा आपत्कालीन कक्षात जा.",
 "The lab values we could read are within the usual ranges. Your doctor will still look at them together with your symptoms.": "आम्ही वाचू शकलेली लॅब मूल्ये सामान्य मर्यादेत आहेत. तरीही तुमचे डॉक्टर ती तुमच्या लक्षणांसह पाहतील.",
-"We could not find familiar terms or lab values in this text. Try pasting the findings or impression section, and check the file was read correctly.": "या मजकुरात आम्हाला ओळखीचे शब्द किंवा लॅब मूल्ये आढळली नाहीत. निष्कर्ष किंवा इम्प्रेशन भाग पेस्ट करून पहा आणि फाइल नीट वाचली गेली आहे का ते तपासा."
+"We could not find familiar terms or lab values in this text. Try pasting the findings or impression section, and check the file was read correctly.": "या मजकुरात आम्हाला ओळखीचे शब्द किंवा लॅब मूल्ये आढळली नाहीत. निष्कर्ष किंवा इम्प्रेशन भाग पेस्ट करून पहा आणि फाइल नीट वाचली गेली आहे का ते तपासा.",
+"Home": "मुख्यपृष्ठ",
+"Learn": "शिका",
+"Plain-language health guides and a glossary of medical terms.": "सोप्या भाषेत आरोग्य मार्गदर्शक आणि वैद्यकीय संज्ञांची शब्दावली.",
+"Next step: prepare for your doctor visit": "पुढील पायरी: डॉक्टरांच्या भेटीची तयारी करा",
+"Feeling anxious or overwhelmed? Take a one-minute breathing break.": "घबराट किंवा अस्वस्थता वाटतेय? एक मिनिट श्वासाचा सराव करा."
 },
 "_names": {
 "hi": {

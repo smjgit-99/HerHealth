@@ -1,6 +1,5 @@
 import streamlit as st
 
-from modules import ui
 from modules.content import load_json
 from modules.translate import current_code, tr_list
 
@@ -9,7 +8,11 @@ LABELS = ["Questions to ask your doctor", "Bring with you", "Download checklist"
 
 
 def render():
-    ui.page_header(*tr_list(["Doctor Visit Checklist", "Questions to take to your appointment, based on your report and symptoms."]))
+    """Rendered under the report results on the Translator page as the next step."""
+    st.divider()
+    head, sub = tr_list(["Next step: prepare for your doctor visit", "Questions to take to your appointment, based on your report and symptoms."])
+    st.markdown(f'<div class="ah-h2" style="margin-top:6px">{head}</div>', unsafe_allow_html=True)
+    st.caption(sub)
     cl = load_json("checklist")
     a = st.session_state.get("analysis")
     if a:

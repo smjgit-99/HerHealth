@@ -2,7 +2,6 @@ from urllib.parse import quote_plus
 
 import streamlit as st
 
-from modules import ui
 from modules.content import load_json
 from modules.translate import current_code, tr_list
 
@@ -12,7 +11,6 @@ LABELS = ["What it is", "Common signs", "Why it happens", "What usually helps", 
 
 
 def render():
-    ui.page_header(*tr_list(["Health Library", "Plain-language guides for common women's health conditions."]))
     data = load_json("diseases")
     st.caption(f"{len(data)} topics in this demo, written in simple language.")
     name = st.selectbox("Choose a topic", [d["name"] for d in data], key="info_topic")

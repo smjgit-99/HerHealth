@@ -4,25 +4,21 @@ import config
 from modules import llm, ui
 from modules.languages import LANGS
 from modules.translate import tr, tr_list
-from views import checklist, community, dashboard, glossary, info, relaxer, reminders, translator
+from views import community, dashboard, learn, translator
 
 st.set_page_config(page_title=config.APP_TITLE, page_icon="🌸", layout="wide", initial_sidebar_state="collapsed")
 ui.inject_css()
 
 # page key -> (nav label, material icon, render function)
 PAGES = {
-    "Dashboard": ("Dashboard", "grid_view", dashboard.render),
+    "Home": ("Home", "home", dashboard.render),
     "Translator": ("Translator", "description", translator.render),
-    "Checklist": ("Checklist", "checklist", checklist.render),
-    "Conditions": ("Conditions", "menu_book", info.render),
-    "Glossary": ("Glossary", "book_2", glossary.render),
-    "Reminders": ("Reminders", "notifications", reminders.render),
     "Community": ("Community", "group", community.render),
-    "Relaxer": ("Relaxer", "air", relaxer.render),
+    "Learn": ("Learn", "menu_book", learn.render),
 }
-st.session_state.setdefault("nav_page", "Dashboard")
+st.session_state.setdefault("nav_page", "Home")
 if st.session_state["nav_page"] not in PAGES:  # stale value from an older session
-    st.session_state["nav_page"] = "Dashboard"
+    st.session_state["nav_page"] = "Home"
 
 # Resolve the language before anything is translated (the selector renders later in the top bar).
 st.session_state["lang_code"] = LANGS.get(st.session_state.get("lang_name", "English"), "en")
@@ -41,7 +37,7 @@ with st.container(key="topbar"):
         lang_name = sel.selectbox("Language", list(LANGS), key="lang_name", label_visibility="collapsed")
 st.session_state["lang_code"] = LANGS[lang_name]
 
-if page in ("Translator", "Checklist"):  # pages that show report-based results keep the visible reminder
+if page == "Translator":  # the page that shows report-based results keeps the visible reminder
     ui.notice(tr("Educational information only. This is not medical advice. Please talk to a doctor about your health."))
 PAGES[page][2]()
 

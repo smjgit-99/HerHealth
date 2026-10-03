@@ -9,7 +9,7 @@ sys.path.insert(0, str(ROOT))
 
 from streamlit.testing.v1 import AppTest  # noqa: E402
 
-PAGES = ["Translator", "Checklist", "Conditions", "Glossary", "Reminders", "Community", "Relaxer", "Dashboard"]
+PAGES = ["Home", "Translator", "Community", "Learn"]
 fails = []
 
 
@@ -33,30 +33,41 @@ for p in PAGES:
     at.radio(key="nav_page").set_value(p).run()
     check(f"page {p}", at)
 
-# 2. sample report end to end
+# 2. sample report end to end (checklist is "next step" on the same page)
 at = fresh()
-at.radio(key="nav_page").set_value(PAGES[0]).run()
+at.radio(key="nav_page").set_value("Translator").run()
 at.button(key="btn_sample").click().run()
 check("sample report", at)
 assert "analysis" in at.session_state, "analysis missing"
 assert len(at.tabs) >= 3, "3 tabs missing"
+assert at.checkbox, "checklist (next step) missing under the report"
 assert any("Hemoglobin" in str(d.value) for d in at.dataframe) or True
-at.radio(key="nav_page").set_value(PAGES[1]).run()
-check("checklist after report", at)
 
-# 3. reminders: add + test character
+# 3. navigation: both Learn sections, Home tiles, breathing break inside Community
 at = fresh()
-at.radio(key="nav_page").set_value(PAGES[4]).run()
-at.button(key="rem_test").click().run()
-check("reminder test alert", at)
-at.button(key="pe_add").click().run()
-check("period reminder add", at)
+for sec in ("Conditions", "Glossary"):
+    at.radio(key="nav_page").set_value("Learn").run()
+    at.radio(key="learn_tab").set_value(sec).run()
+    check(f"learn/{sec}", at)
+at = fresh()
+at.button(key="go_glossary").click().run()
+assert at.session_state["nav_page"] == "Learn" and at.session_state["learn_tab"] == "Glossary", "glossary tile"
+check("home tile -> glossary", at)
+at = fresh()
+at.button(key="go_relaxer").click().run()
+assert at.session_state["nav_page"] == "Community", "relaxer tile"
+check("home tile -> breathing break", at)
+for tile in ("translator", "checklist", "community", "library"):
+    at = fresh()
+    at.button(key=f"go_{tile}").click().run()
+    check(f"home tile {tile}", at)
+assert not any("eminder" in str(m.value) for m in at.markdown), "reminder text still present"
 
 # 4. non-English fallback (works online or offline)
 t = time.time()
 at = fresh()
 at.selectbox(key="lang_name").set_value("Hindi").run()
-at.radio(key="nav_page").set_value(PAGES[0]).run()
+at.radio(key="nav_page").set_value("Translator").run()
 at.button(key="btn_sample").click().run()
 check(f"Hindi sample ({time.time() - t:.0f}s)", at)
 for p in PAGES[1:]:

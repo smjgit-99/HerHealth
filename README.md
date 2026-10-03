@@ -1,7 +1,7 @@
 # HerHealth: Women's Health Information Translator
 
-Turns medical reports into simple language, in 18+ Indian languages, with a doctor-visit checklist,
-health info, glossary, a reminder character, and a community preview.
+Turns medical reports into simple language (English, Hindi, Marathi), with a doctor-visit checklist,
+a health library and glossary, a breathing break for medical anxiety, and a community preview.
 
 ## Run (VS Code terminal)
     1. python -m venv .venv
@@ -20,9 +20,9 @@ Image OCR needs Tesseract installed locally (Windows: https://github.com/UB-Mann
 ## Where things live
 | Path | What |
 |---|---|
-| app.py | top navigation bar, language picker, page routing |
+| app.py | top navigation bar (Home, Translator, Community, Learn), language picker, page routing |
 | config.py | **mascot name / image**, timezone, model |
-| views/ | one file per page (translator, checklist, info, glossary, reminders, community) |
+| views/ | dashboard (Home), translator (+ checklist as "next step"), community (+ breathing break), learn (info + glossary) |
 | modules/ | logic: ingest (files+OCR), analyzer, ranges, highlight, translate, tts, llm |
 | data/ | all static content as JSON. **Edit here, no code needed** |
 | assets/mascot/mascot.png | put your character image here |
@@ -32,8 +32,9 @@ Image OCR needs Tesseract installed locally (Windows: https://github.com/UB-Mann
 - Have the team doctor/mentor check `data/reference_ranges.json` and `data/diseases.json`.
 - Run "Try sample report" in each demo language once, to warm the translation cache.
 - Keep the sample report and one PDF and one image ready. Have a phone hotspot as backup for Wi-Fi.
-- Say clearly: community is a preview with sample stories; reminders show while the app is open.
+- Say clearly: community is a preview with sample stories.
 
-remove reminder feature
-login register create (digiLocker)
-c
+## Roadmap (hackathon)
+- [x] Remove reminders; merge checklist into Translator, library + glossary into Learn, relaxer into Community
+- [ ] Login / register (DigiLocker sandbox flow)
+- [ ] Report-verified community badge, moderated posting, consent-based connect
