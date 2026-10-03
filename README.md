@@ -33,3 +33,7 @@ Image OCR needs Tesseract installed locally (Windows: https://github.com/UB-Mann
 - Run "Try sample report" in each demo language once, to warm the translation cache.
 - Keep the sample report and one PDF and one image ready. Have a phone hotspot as backup for Wi-Fi.
 - Say clearly: community is a preview with sample stories; reminders show while the app is open.
+
+remove reminder feature
+login register create (digiLocker)
+c
