@@ -1,6 +1,7 @@
 import streamlit as st
 import config
 from modules import llm, ui
+from modules.auth import get_supabase_client
 from modules.languages import LANGS
 from modules.translate import tr, tr_list
 from views import community, dashboard, learn, translator, relaxer
@@ -10,9 +11,24 @@ from auth_ui import render_auth_ui
 st.set_page_config(page_title=config.APP_TITLE, page_icon="🌸", layout="wide", initial_sidebar_state="collapsed")
 ui.inject_css()
 
+# Get Supabase Client
+supabase = get_supabase_client()
+
+# Restore Supabase session from Streamlit state if available
+if "supabase_session" in st.session_state:
+    try:
+        supabase.auth.set_session(
+            st.session_state["supabase_session"]["access_token"],
+            st.session_state["supabase_session"]["refresh_token"]
+        )
+    except Exception:
+        pass
+
+# Check active session
+session = supabase.auth.get_session()
+is_logged_in = session is not None
+
 # 2. Session State Initialization
-if 'logged_in' not in st.session_state:
-    st.session_state.logged_in = False
 if 'nav_page' not in st.session_state:
     st.session_state.nav_page = "Home"
 
@@ -36,7 +52,13 @@ def go_to_signin():
     st.session_state.nav_page = "Community"
 
 def do_signout():
-    st.session_state.logged_in = False
+    try:
+        supabase.auth.sign_out()
+    except Exception:
+        pass
+    if "supabase_session" in st.session_state:
+        del st.session_state["supabase_session"]
+    st.rerun()
 
 # 3. Custom Top Bar Render
 with st.container(key="topbar"):
@@ -67,7 +89,7 @@ with st.container(key="topbar"):
         lang_name = sel.selectbox("Language", list(LANGS), key="lang_name", label_visibility="collapsed")
     
     with c_auth:
-        if st.session_state.logged_in:
+        if is_logged_in:
             st.button("Sign Out", type="secondary", on_click=do_signout)
         else:
             st.button("Sign In", type="primary", on_click=go_to_signin)
@@ -76,7 +98,7 @@ st.session_state["lang_code"] = LANGS[lang_name]
 
 # 4. Routing Logic
 page = st.session_state["nav_page"]
-if page == "Community" and not st.session_state.logged_in:
+if page == "Community" and not is_logged_in:
     render_auth_ui()
 else:
     if page == "Translator":

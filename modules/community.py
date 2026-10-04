@@ -72,34 +72,32 @@ def _alias_for(name: str) -> str:
 
 
 def resolve_user_id(user_data):
-    """Map the signed-in person (st.session_state.user_data from auth_ui) to a row in `users`.
-
-    auth_ui keeps the login in session state only, so Community needs a stable database id for
-    onboarding choices, posts and reactions. Accounts from auth.login already carry an `id`;
-    for the others a row is created once, keyed by email. That row has no usable password,
-    so it cannot be used to sign in by itself.
-    """
+    """Map the signed-in Supabase user to a local SQLite user row using email as the source of truth."""
     if not user_data:
         return None
     try:
-        uid = user_data["id"]
-        if uid and db.one("SELECT 1 FROM users WHERE id=?", (uid,)):
-            return uid
-    except (KeyError, IndexError, TypeError):
-        pass
-    try:
-        email = (user_data["email"] or "").strip().lower()
-        name = user_data["name"] if "name" in user_data.keys() else ""
-    except (KeyError, IndexError, TypeError, AttributeError):
-        return None
-    if not email:
-        return None
-    row = db.one("SELECT id FROM users WHERE email=?", (email,))
-    if row:
-        return row["id"]
-    return db.run("INSERT INTO users(email, alias, salt, pw_hash, created) VALUES(?,?,?,?,?)",
-                  (email, _alias_for(name), secrets.token_bytes(16), secrets.token_bytes(32), time.time()))
+        # Extract email safely from Supabase user object or dict
+        email = getattr(user_data, "email", None) or user_data.get("email", "")
+        if not email:
+            return None
+        email = email.strip().lower()
 
+        # Extract name from metadata if available
+        metadata = getattr(user_data, "user_metadata", None) or user_data.get("user_metadata", {})
+        name = metadata.get("full_name", "") if metadata else ""
+
+        # Always resolve primarily by email to prevent duplicate rows and ID mismatches
+        row = db.one("SELECT id FROM users WHERE email=?", (email,))
+        if row:
+            return row["id"]
+
+        # If user doesn't exist locally yet, create them
+        return db.run(
+            "INSERT INTO users(email, alias, salt, pw_hash, created) VALUES(?,?,?,?,?)",
+            (email, _alias_for(name), secrets.token_bytes(16), secrets.token_bytes(32), time.time())
+        )
+    except Exception:
+        return None
 
 def ago(ts: float) -> str:
     s = max(0, time.time() - ts)

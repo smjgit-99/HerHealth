@@ -169,7 +169,9 @@ def one(sql: str, args=()):
 
 def run(sql: str, args=()) -> int:
     with conn() as c:
-        return c.execute(sql, args).lastrowid
+        cur = c.execute(sql, args)
+        c.commit()  # Explicitly commit write queries so updates persist globally
+        return cur.lastrowid
 
 
 # ---- posts -----------------------------------------------------------------
