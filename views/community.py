@@ -4,11 +4,16 @@ import time
 import streamlit as st
 
 from modules import auth, db, ui
-from views import relaxer
 from modules.content import load_json
 from modules.translate import tr, tr_list
 
-# Sample "Report Twin" matches for the demo (tag based only, no health data is shared).
+# Community Rules definition
+RULES = [
+    "Be respectful and supportive to fellow community members.",
+    "Do not share explicit personal health identifying details.",
+    "Moderators review posts to maintain a safe and welcoming space."
+]
+
 TWINS = [
     ("Sunflower_22", 92, ["#PCOS", "#Hormones", "#Insulin Resistance"], "#B56BE0,#8A5CD0"),
     ("Mountain_Mom", 85, ["#PCOS", "#Fertility", "#Hashimotos"], "#4AB3D6,#5A8FE0"),
@@ -73,37 +78,9 @@ def _twins(L):
         st.markdown(f'<div class="ah-fine">{L[LABELS[8]]}</div>', unsafe_allow_html=True)
 
 
-
-
-
 def _account(L, T, user):
-    """Sign in / create account, or the signed-in member panel."""
+    """Signed-in member panel. Renders nothing if the user is logged out."""
     if user is None:
-        with st.container(key="card_auth"):
-            st.caption(T["Sign in to post, connect or report."])
-            t_in, t_up = st.tabs([T["Sign in"], T["Create account"]])
-            with t_in, st.form("f_login"):
-                em = st.text_input(T["Email"], key="li_email")
-                pw = st.text_input(T["Password"], type="password", key="li_pw")
-                if st.form_submit_button(T["Sign in"], type="primary"):
-                    u, err = auth.login(em, pw)
-                    if err:
-                        st.error(tr(err))
-                    else:
-                        st.session_state["user_id"] = u["id"]
-                        st.rerun()
-            with t_up, st.form("f_signup"):
-                em = st.text_input(T["Email"], key="su_email")
-                al = st.text_input(T["Alias (not your real name)"], key="su_alias")
-                pw = st.text_input(T["Password"], type="password", key="su_pw")
-                st.caption(T["Password must be at least 8 characters. Your email is never shown to others."])
-                if st.form_submit_button(T["Create account"], type="primary"):
-                    u, err = auth.register(em, al, pw)
-                    if err:
-                        st.error(tr(err))
-                    else:
-                        st.session_state["user_id"] = u["id"]
-                        st.rerun()
         return
 
     with st.container(key="card_account"):
@@ -207,11 +184,22 @@ def render():
     user = auth.get_user(st.session_state.get("user_id"))
     if user is None:
         st.session_state.pop("user_id", None)
+        
     ui.page_header(L["Verified Peer Community"], L["Connect with others on similar health journeys."])
-    ui.notice(L[LABELS[18]])
-    with st.expander(L[LABELS[24]], icon=":material/air:", expanded=bool(st.session_state.pop("open_calm", False))):
-        relaxer.render(embedded=True)
+    
+    # Aesthetic & Calm Relaxer Card linked to the new standalone Relax page
+    with st.container(border=True):
+        col1, col2 = st.columns([5, 1.5], vertical_alignment="center")
+        col1.markdown(
+            "🌿 **Take a Moment for Yourself**\n\n"
+            "*Feeling anxious or overwhelmed? Take a one-minute breathing break to center your mind.*"
+        )
+        if col2.button("✨ Breathe", key="goto_relax_page", type="primary", use_container_width=True):
+            st.session_state["nav_page"] = "Relax"
+            st.rerun()
+
     _account(L, T, user)
+    
     if user is not None and user["role"] == "admin":
         _moderation(T)
     _twins(L)

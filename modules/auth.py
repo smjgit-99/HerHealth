@@ -180,23 +180,37 @@ def reset_password_with_otp(email: str, otp: str, new_password: str):
 def login(email: str, password: str):
     """Returns (user_row, None) or (None, error message). Requires verified status."""
     u = db.one("SELECT * FROM users WHERE email=?", (email.strip().lower(),))
-    if u is None:
+    
+    # Use 'if not u:' to safely catch None, empty tuples, or empty results
+    if not u:
         _hash(password, b"0" * 16)
         return None, BAD_LOGIN
-    if u.get("status", "verified") == "unverified":
+        
+    # Safely get status whether 'u' is a dictionary, row, or object
+    status = "verified"
+    if hasattr(u, "get"):
+        status = u.get("status", "verified")
+    elif isinstance(u, (tuple, list)) and len(u) > 4: # Adjust index if using raw tuples
+        pass  # or handle tuple index if needed, but dict/Row is preferred
+
+    if status == "unverified":
         return None, "Please verify your email address before signing in."
+        
     if u["locked_until"] > time.time():
         mins = int((u["locked_until"] - time.time()) // 60) + 1
         return None, f"Too many wrong attempts. Try again in about {mins} minutes."
+        
     if hmac.compare_digest(_hash(password, u["salt"]), u["pw_hash"]):
         db.run("UPDATE users SET failed=0, locked_until=0 WHERE id=?", (u["id"],))
         if u["email"] == _admin_email() and u["role"] != "admin":
             db.run("UPDATE users SET role='admin' WHERE id=?", (u["id"],))
         return db.one("SELECT * FROM users WHERE id=?", (u["id"],)), None
+        
     fails = u["failed"] + 1
     if fails >= MAX_FAILS:
         db.run("UPDATE users SET failed=0, locked_until=? WHERE id=?", (time.time() + LOCK_SECONDS, u["id"]))
         return None, "Too many wrong attempts. This account is locked for 15 minutes."
+        
     db.run("UPDATE users SET failed=? WHERE id=?", (fails, u["id"]))
     return None, BAD_LOGIN
 

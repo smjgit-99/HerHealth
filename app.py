@@ -3,7 +3,7 @@ import config
 from modules import llm, ui
 from modules.languages import LANGS
 from modules.translate import tr, tr_list
-from views import community, dashboard, learn, translator
+from views import community, dashboard, learn, translator, relaxer
 from auth_ui import render_auth_ui
 
 # 1. Page Config & CSS Injection
@@ -22,6 +22,7 @@ PAGES = {
     "Translator": ("Translator", "description", translator.render),
     "Community": ("Community", "group", community.render),
     "Learn": ("Learn", "menu_book", learn.render),
+    "Relax": [":material/air:", "Relax & Breathe", relaxer.render],
 }
 
 if st.session_state["nav_page"] not in PAGES:
