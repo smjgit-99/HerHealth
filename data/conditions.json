@@ -1,0 +1,86 @@
+[
+  {
+    "id": "periods",
+    "name": "Periods/PMS",
+    "icon": "🩸",
+    "description": "Cycle changes, period pain, heavy or irregular periods and PMS symptoms.",
+    "fact": "For most adults a cycle of about 21 to 35 days is considered typical, but it can vary from person to person."
+  },
+  {
+    "id": "pcos",
+    "name": "PCOS/PCOD",
+    "icon": "🌀",
+    "description": "Living with polycystic ovary syndrome or disease: symptoms, tests, lifestyle and treatment experiences.",
+    "fact": "PCOS is one of the most common hormonal conditions in women of reproductive age, and many people go undiagnosed for years."
+  },
+  {
+    "id": "pregnancy",
+    "name": "Pregnancy",
+    "icon": "🤰",
+    "description": "Questions and experiences from early pregnancy to delivery.",
+    "fact": "Regular antenatal check-ups help doctors spot and manage problems early."
+  },
+  {
+    "id": "postpartum",
+    "name": "Postpartum",
+    "icon": "🍼",
+    "description": "Recovery, feeding, sleep and emotional wellbeing after having a baby.",
+    "fact": "Mood changes after birth are common, and support is available. You do not have to cope alone."
+  },
+  {
+    "id": "fertility",
+    "name": "Fertility",
+    "icon": "🌱",
+    "description": "Trying to conceive, fertility tests, treatments and the emotional side of the journey.",
+    "fact": "Fertility depends on both partners, and many causes can be treated. A doctor can advise when to get tested."
+  },
+  {
+    "id": "menopause",
+    "name": "Menopause",
+    "icon": "🌅",
+    "description": "Perimenopause and menopause: hot flashes, sleep, mood and life after menopause.",
+    "fact": "Menopause is confirmed after 12 months without a period, and symptoms can start years earlier during perimenopause."
+  },
+  {
+    "id": "thyroid",
+    "name": "Thyroid",
+    "icon": "🦋",
+    "description": "Hypothyroidism, hyperthyroidism, Hashimoto's and understanding thyroid reports.",
+    "fact": "Thyroid conditions are more common in women, and a simple blood test such as TSH is how they are usually checked."
+  },
+  {
+    "id": "endometriosis",
+    "name": "Endometriosis",
+    "icon": "🌸",
+    "description": "Pain, diagnosis, treatment and day-to-day life with endometriosis.",
+    "fact": "Endometriosis is often diagnosed late. A symptom diary can help your doctor understand what you are feeling."
+  },
+  {
+    "id": "mental",
+    "name": "Mental Wellbeing",
+    "icon": "🧘",
+    "description": "Stress, anxiety, low mood and looking after your mind alongside your body.",
+    "fact": "Hormonal changes across the cycle, pregnancy and menopause can affect mood. Talking to someone can help."
+  },
+  {
+    "id": "breast",
+    "name": "Breast Health",
+    "icon": "🎀",
+    "description": "Breast changes, screening, check-ups and support during tests or treatment.",
+    "fact": "Knowing how your breasts normally look and feel helps you notice changes to mention to your doctor."
+  },
+  {
+    "id": "uti",
+    "name": "UTI",
+    "icon": "💧",
+    "description": "Urinary tract infections: symptoms, prevention and recurring infections.",
+    "fact": "UTIs are very common in women. Burning or frequent urination is worth getting tested early."
+  },
+  {
+    "id": "anemia",
+    "name": "Anemia",
+    "icon": "🥬",
+    "description": "Low hemoglobin or iron: tiredness, diet, tests and follow-up.",
+    "fact": "Iron-deficiency anemia is common in women, especially with heavy periods. A blood test confirms it."
+  }
+]
