@@ -1,11 +1,12 @@
 import html
+import time
 
 import streamlit as st
 
-from modules import ui
+from modules import auth, db, ui
 from views import relaxer
 from modules.content import load_json
-from modules.translate import tr_list
+from modules.translate import tr, tr_list
 
 # Sample "Report Twin" matches for the demo (tag based only, no health data is shared).
 TWINS = [
@@ -19,24 +20,25 @@ AVATARS = ["#B56BE0,#8A5CD0", "#4AB3D6,#5A8FE0", "#F2A65A,#F0708F", "#7A8FE6,#5A
 LABELS = ["Verified Peer Community", "Connect with others on similar health journeys.",
           "Find My Report Twin", "Match with users who share similar diagnostic tags", "Hide", "Show matches", "Connect",
           "match", "Matches based on non-sensitive diagnostic tags only. No personal health data is shared.",
-          "Share your experience or ask a question...", "Posting as anonymous", "Post", "All", "You", "just now",
+          "Share your experience or ask a question...", "Posting as", "Post", "All", "You", "just now",
           "Request to connect", "Report misinformation", "Filter by tag",
-          "Demo preview: these are sample stories written for this demo. Posts you write stay in this session only and are not saved or shared.",
-          "Connect request (demo): in the full version, a moderated, consent-based request is sent and no contact details are shared.",
-          "Report received (demo): in the full version, a moderator reviews it and removes wrong claims.",
-          "No posts with this tag yet. Write the first one above.",
+          "Sample stories below were written for this demo. Posts from verified members appear above them after a moderator approves them.",
+          "Connect request (demo match): real requests go to verified members from their posts.",
+          "Report received. A moderator will review it.",
+          "No posts with this tag yet.",
           "How we keep it free of misinformation",
-          "In this demo these steps are described, not implemented. The stories below were written and reviewed by the team.",
+          "Moderators check every proof document and every post before it is shown.",
           "Feeling anxious or overwhelmed? Take a one-minute breathing break."]
-RULES = [
-    "Only people whose diagnosis is confirmed by a lab report or doctor letter can join. A moderator checks the document.",
-    "Posts share experiences only. No medicine names, doses or treatment advice.",
-    "Every post is reviewed by a moderator before it appears.",
-    "Health facts in posts are checked against trusted sources, and wrong claims are removed.",
-    "Anyone can report a post. Reports are reviewed quickly.",
-    "Identity stays private: alias only, no phone number, address or reports are shown.",
-    "A connection needs consent from both people.",
-]
+N = ["Sign in", "Create account", "Email", "Password", "Alias (not your real name)", "Sign out", "Sign in to post, connect or report.",
+     "Password must be at least 8 characters. Your email is never shown to others.",
+     "Get verified to post", "Condition tag", "Upload a lab report or doctor letter (PDF, PNG or JPG)",
+     "Submit for verification", "Sent. A moderator will check it. The document is deleted right after the decision.",
+     "Your verification is waiting for a moderator.", "Your verification was not accepted. You can upload a different document.",
+     "You are a verified member.", "Your post was sent to a moderator and will appear once approved.", "Waiting for approval",
+     "Approved", "Connection requests", "Accept", "Decline", "Your connections", "Request sent.",
+     "Already requested or connected.", "Only verified members can post or connect.", "Already reported. Thank you.",
+     "Moderation", "Verification requests", "Approve", "Reject", "Posts waiting for approval", "Reported posts",
+     "Remove post", "Keep post", "Nothing waiting.", "Download document", "Verified member", "Sample story"]
 
 
 def _avatar(grad: str, size: int = 52) -> str:
@@ -72,42 +74,200 @@ def _twins(L):
 
 
 
+
+
+def _account(L, T, user):
+    """Sign in / create account, or the signed-in member panel."""
+    if user is None:
+        with st.container(key="card_auth"):
+            st.caption(T["Sign in to post, connect or report."])
+            t_in, t_up = st.tabs([T["Sign in"], T["Create account"]])
+            with t_in, st.form("f_login"):
+                em = st.text_input(T["Email"], key="li_email")
+                pw = st.text_input(T["Password"], type="password", key="li_pw")
+                if st.form_submit_button(T["Sign in"], type="primary"):
+                    u, err = auth.login(em, pw)
+                    if err:
+                        st.error(tr(err))
+                    else:
+                        st.session_state["user_id"] = u["id"]
+                        st.rerun()
+            with t_up, st.form("f_signup"):
+                em = st.text_input(T["Email"], key="su_email")
+                al = st.text_input(T["Alias (not your real name)"], key="su_alias")
+                pw = st.text_input(T["Password"], type="password", key="su_pw")
+                st.caption(T["Password must be at least 8 characters. Your email is never shown to others."])
+                if st.form_submit_button(T["Create account"], type="primary"):
+                    u, err = auth.register(em, al, pw)
+                    if err:
+                        st.error(tr(err))
+                    else:
+                        st.session_state["user_id"] = u["id"]
+                        st.rerun()
+        return
+
+    with st.container(key="card_account"):
+        a, b = st.columns([6, 1.3], vertical_alignment="center")
+        a.markdown(f'**{html.escape(user["alias"])}**' + (f' · ✓ {T["You are a verified member."]}' if user["status"] == "verified" else ""))
+        if b.button(T["Sign out"], key="so", width="stretch"):
+            st.session_state.pop("user_id", None)
+            st.rerun()
+
+        if user["status"] in ("unverified", "rejected"):
+            if user["status"] == "rejected":
+                st.warning(T["Your verification was not accepted. You can upload a different document."])
+            st.markdown(f'**{T["Get verified to post"]}**')
+            tag = st.selectbox(T["Condition tag"], FILTERS, key="v_tag")
+            up = st.file_uploader(T["Upload a lab report or doctor letter (PDF, PNG or JPG)"], type=["pdf", "png", "jpg", "jpeg"], key="v_file")
+            if st.button(T["Submit for verification"], key="v_go", disabled=up is None):
+                err = auth.submit_verification(user["id"], tag, up.name, up.getvalue())
+                if err:
+                    st.error(tr(err))
+                else:
+                    st.success(T["Sent. A moderator will check it. The document is deleted right after the decision."])
+                    st.rerun()
+        elif user["status"] == "pending":
+            st.info(T["Your verification is waiting for a moderator."])
+
+        reqs = db.incoming_requests(user["id"])
+        if reqs:
+            st.markdown(f'**{T["Connection requests"]}**')
+            for r in reqs:
+                c1, c2, c3 = st.columns([4, 1.2, 1.2], vertical_alignment="center")
+                c1.write(r["alias"])
+                if c2.button(T["Accept"], key=f"acc_{r['id']}"):
+                    db.answer_request(r["id"], user["id"], True)
+                    st.rerun()
+                if c3.button(T["Decline"], key=f"dec_{r['id']}"):
+                    db.answer_request(r["id"], user["id"], False)
+                    st.rerun()
+        friends = db.connections_of(user["id"])
+        if friends:
+            st.caption(f'{T["Your connections"]}: ' + ", ".join(f["alias"] for f in friends))
+
+
+def _moderation(T):
+    with st.expander(T["Moderation"], icon=":material/shield:"):
+        st.markdown(f'**{T["Verification requests"]}**')
+        v = auth.pending_verifications()
+        for r in v:
+            c1, c2, c3, c4 = st.columns([3, 2.5, 1.2, 1.2], vertical_alignment="center")
+            c1.write(f'{r["alias"]} · {r["tag"]}')
+            c2.download_button(T["Download document"], r["doc_blob"], file_name=r["doc_name"], key=f"dl_{r['id']}")
+            if c3.button(T["Approve"], key=f"va_{r['id']}"):
+                auth.decide_verification(r["id"], True)
+                st.rerun()
+            if c4.button(T["Reject"], key=f"vr_{r['id']}"):
+                auth.decide_verification(r["id"], False)
+                st.rerun()
+        if not v:
+            st.caption(T["Nothing waiting."])
+
+        st.markdown(f'**{T["Posts waiting for approval"]}**')
+        pp = db.pending_posts()
+        for p in pp:
+            st.write(f'{p["alias"]} · {p["tag"]}')
+            st.info(p["story"])
+            c1, c2, _ = st.columns([1.2, 1.2, 5])
+            if c1.button(T["Approve"], key=f"pa_{p['id']}"):
+                db.set_post_status(p["id"], "approved")
+                st.rerun()
+            if c2.button(T["Reject"], key=f"pr_{p['id']}"):
+                db.set_post_status(p["id"], "removed")
+                st.rerun()
+        if not pp:
+            st.caption(T["Nothing waiting."])
+
+        st.markdown(f'**{T["Reported posts"]}**')
+        rp = db.open_reports()
+        for p in rp:
+            st.write(f'{p["alias"]} · {p["tag"]}')
+            st.warning(p["story"])
+            c1, c2, _ = st.columns([1.5, 1.5, 4])
+            if c1.button(T["Remove post"], key=f"rm_{p['rid']}"):
+                db.set_post_status(p["pid"], "removed")
+                db.close_reports(p["pid"])
+                st.rerun()
+            if c2.button(T["Keep post"], key=f"kp_{p['rid']}"):
+                db.close_reports(p["pid"])
+                st.rerun()
+        if not rp:
+            st.caption(T["Nothing waiting."])
+
+
+def _ago(ts: float) -> str:
+    s = max(0, time.time() - ts)
+    return "just now" if s < 3600 else f"{int(s // 3600)}h" if s < 86400 else f"{int(s // 86400)}d"
+
+
 def render():
+    db.init()
     L = dict(zip(LABELS, tr_list(LABELS)))
+    T = dict(zip(N, tr_list(N)))
+    user = auth.get_user(st.session_state.get("user_id"))
+    if user is None:
+        st.session_state.pop("user_id", None)
     ui.page_header(L["Verified Peer Community"], L["Connect with others on similar health journeys."])
     ui.notice(L[LABELS[18]])
     with st.expander(L[LABELS[24]], icon=":material/air:", expanded=bool(st.session_state.pop("open_calm", False))):
         relaxer.render(embedded=True)
+    _account(L, T, user)
+    if user is not None and user["role"] == "admin":
+        _moderation(T)
     _twins(L)
 
-    posts = load_json("community")
-    tags = FILTERS + sorted({p["tag"] for p in posts} - set(FILTERS))
+    sample = load_json("community")
+    real = db.approved_posts()
+    tags = FILTERS + sorted(({p["tag"] for p in sample} | {p["tag"] for p in real}) - set(FILTERS))
     s, p = st.columns([0.35, 12], vertical_alignment="center")
     s.markdown(ui.icon("search", 18, "#6B6880"), unsafe_allow_html=True)
     with p:
         pick = st.pills(L["Filter by tag"], [L["All"]] + tags, default=L["All"], key="cm_tag", label_visibility="collapsed")
     active = None if pick in (None, L["All"]) else pick
 
-    with st.container(key="card_compose"):
-        text = st.text_area("post", placeholder=L[LABELS[9]], height=80, key="cm_text", label_visibility="collapsed")
-        c1, c2 = st.columns([6, 1.1], vertical_alignment="center")
-        c1.markdown(f'<div class="ah-fine">{L[LABELS[10]]} · {active or "#General"}</div>', unsafe_allow_html=True)
-        if c2.button(L["Post"], key="cm_post", type="primary", icon=":material/send:", width="stretch", disabled=not (text or "").strip()):
-            st.session_state.setdefault("cm_mine", []).insert(0, {"alias": L["You"], "tag": active or "#General", "story": text.strip(), "mine": True})
-            st.session_state["cm_text"] = ""
-            st.rerun()
+    if user is not None and user["status"] == "verified":
+        with st.container(key="card_compose"):
+            text = st.text_area("post", placeholder=L[LABELS[9]], height=80, key="cm_text", label_visibility="collapsed", max_chars=2000)
+            c1, c2 = st.columns([6, 1.1], vertical_alignment="center")
+            c1.markdown(f'<div class="ah-fine">{L[LABELS[10]]} {html.escape(user["alias"])} · {active or user["tag"] or "#General"}</div>', unsafe_allow_html=True)
+            if c2.button(L["Post"], key="cm_post", type="primary", icon=":material/send:", width="stretch", disabled=not (text or "").strip()):
+                db.add_post(user["id"], active or user["tag"] or "#General", text)
+                st.session_state["cm_sent"] = True
+                st.session_state["cm_text"] = ""
+                st.rerun()
+        if st.session_state.pop("cm_sent", False):
+            st.success(T["Your post was sent to a moderator and will appear once approved."])
+        waiting = [m for m in db.my_posts(user["id"]) if m["status"] == "pending"]
+        for m in waiting:
+            st.caption(f'⏳ {T["Waiting for approval"]}: {m["story"][:80]}')
 
-    mine = [m for m in st.session_state.get("cm_mine", []) if not active or m["tag"] == active]
-    shown = [c for c in posts if not active or c["tag"] == active]
+    shown_real = [c for c in real if not active or c["tag"] == active]
+    shown = [c for c in sample if not active or c["tag"] == active]
     flat = tr_list([x for c in shown for x in (c["title"], c["story"], c["tip"], c["verified_by"])])
-    if not (mine or shown):
+    real_tr = tr_list([c["story"] for c in shown_real])
+    if not (shown_real or shown):
         st.info(L[LABELS[21]])
 
-    for m in mine:
-        with st.container(key=f"card_post_me_{abs(hash(m['story'])) % 10**6}"):
-            st.markdown(f'<div class="ah-post">{_avatar(AVATARS[0], 46)}<div><span class="who">{html.escape(m["alias"])}</span>'
-                        f'<span class="ago">{L["just now"]}</span><div class="ah-tags">{_tags([m["tag"]])}</div>'
-                        f'<p>{html.escape(m["story"])}</p></div></div>', unsafe_allow_html=True)
+    for i, c in enumerate(shown_real):
+        with st.container(key=f"card_post_db_{c['id']}"):
+            st.markdown(
+                f'<div class="ah-post">{_avatar(AVATARS[c["user_id"] % len(AVATARS)], 46)}<div>'
+                f'<span class="who">{html.escape(c["alias"])}</span><span class="ago">{_ago(c["created"])}</span>'
+                f'<span class="ah-ver">✓ {T["Verified member"]}</span><div class="ah-tags">{_tags([c["tag"]])}</div>'
+                f'<p>{html.escape(real_tr[i])}</p></div></div>', unsafe_allow_html=True)
+            b1, b2, _ = st.columns([1.6, 2.1, 5])
+            if b1.button(L["Request to connect"], key=f"conn_db_{c['id']}", type="tertiary", icon=":material/person_add:"):
+                if user is None or user["status"] != "verified":
+                    st.toast(T["Only verified members can post or connect."])
+                elif db.request_connection(user["id"], c["user_id"]):
+                    st.toast(T["Request sent."])
+                else:
+                    st.toast(T["Already requested or connected."])
+            if b2.button(L["Report misinformation"], key=f"rep_db_{c['id']}", type="tertiary", icon=":material/flag:"):
+                if user is None:
+                    st.toast(T["Sign in to post, connect or report."])
+                else:
+                    st.toast(L[LABELS[20]] if db.add_report(c["id"], user["id"]) else T["Already reported. Thank you."])
 
     for i, c in enumerate(shown):
         title, story, tip, ver = flat[i * 4:(i + 1) * 4]
@@ -117,15 +277,11 @@ def render():
             st.markdown(
                 f'<div class="ah-post">{_avatar(AVATARS[(i + 1) % len(AVATARS)], 46)}<div>'
                 f'<span class="who">{html.escape(c["alias"])}</span><span class="ago">{c["ago"]} ago</span>'
-                f'<span class="ah-ver">✓ {html.escape(ver)}</span><div class="ah-tags">{_tags([c["tag"]])}</div>'
+                f'<span class="ah-ver">✓ {html.escape(ver)}</span><span class="ah-tag">{T["Sample story"]}</span>'
+                f'<div class="ah-tags">{_tags([c["tag"]])}</div>'
                 f'<p>{head}{html.escape(story)}</p>{tip_html}'
                 f'<div class="meta"><span>{ui.icon("heart", 16)}{c["likes"]}</span><span>{ui.icon("message", 16)}{c["comments"]}</span></div>'
                 f'</div></div>', unsafe_allow_html=True)
-            b1, b2, _ = st.columns([1.6, 2.1, 5])
-            if b1.button(L["Request to connect"], key=f"conn_{c['id']}", type="tertiary", icon=":material/person_add:"):
-                st.toast(L[LABELS[19]])
-            if b2.button(L["Report misinformation"], key=f"rep_{c['id']}", type="tertiary", icon=":material/flag:"):
-                st.toast(L[LABELS[20]])
 
     with st.expander(L[LABELS[22]]):
         for r in tr_list(RULES):

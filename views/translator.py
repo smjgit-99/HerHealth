@@ -132,3 +132,36 @@ def render():
         _show()
 
     checklist.render()
+
+# --- Translator -> Community CTA Cards ---
+    st.write("")
+    st.markdown("---")
+    st.markdown("### 🌸 Take the Next Step in Your Health Journey")
+    
+    col_cta1, col_cta2 = st.columns(2, gap="medium")
+    
+    with col_cta1:
+        with st.container(key="card_cta_community"):
+            st.markdown("""
+                <div style="background: linear-gradient(135deg, #F5EEFB, #FCEFF6); padding: 20px; border-radius: 12px; border: 1px solid #EFEAF8;">
+                    <h4 style="color: #1D1B2A; margin-top: 0;">Join the HerHealth Community</h4>
+                    <p style="color: #6B6880; font-size: 0.9rem;">Have questions about your lab results or looking for empathetic peer support? Connect with others in a secure, private space.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            st.write("")
+            if st.button("Join Community Now", type="primary", use_container_width=True, key="btn_cta_join_comm"):
+                st.session_state.nav_page = "Community"
+                st.rerun()
+                
+    with col_cta2:
+        with st.container(key="card_cta_signin"):
+            st.markdown("""
+                <div style="background: linear-gradient(135deg, #EEF4FD, #F1F8FD); padding: 20px; border-radius: 12px; border: 1px solid #D1E3F8;">
+                    <h4 style="color: #1D1B2A; margin-top: 0;">Save & Track Your Reports</h4>
+                    <p style="color: #6B6880; font-size: 0.9rem;">Sign in to your account to securely store your translated insights, track health trends over time, and access personalized guides.</p>
+                </div>
+            """, unsafe_allow_html=True)
+            st.write("")
+            if st.button("Sign In to Account", use_container_width=True, key="btn_cta_signin_acc"):
+                st.session_state.nav_page = "Community"
+                st.rerun()
