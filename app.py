@@ -38,7 +38,7 @@ PAGES = {
     "Translator": ("Translator", "description", translator.render),
     "Community": ("Community", "group", community.render),
     "Learn": ("Learn", "menu_book", learn.render),
-    "Relax": [":material/air:", "Relax & Breathe", relaxer.render],
+    "Relax": ("Relax & Breathe", "air", relaxer.render),
 }
 
 if st.session_state["nav_page"] not in PAGES:
