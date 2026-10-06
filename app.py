@@ -1,7 +1,6 @@
 import streamlit as st
 import config
-from modules import llm, ui
-from modules.auth import get_supabase_client
+from modules import llm, ui, auth
 from modules.languages import LANGS
 from modules.translate import tr, tr_list
 from views import community, dashboard, learn, translator, relaxer
@@ -12,21 +11,11 @@ st.set_page_config(page_title=config.APP_TITLE, page_icon="🌸", layout="wide",
 ui.inject_css()
 
 # Get Supabase Client
-supabase = get_supabase_client()
+supabase = auth.get_supabase_client()
 
-# Restore Supabase session from Streamlit state if available
-if "supabase_session" in st.session_state:
-    try:
-        supabase.auth.set_session(
-            st.session_state["supabase_session"]["access_token"],
-            st.session_state["supabase_session"]["refresh_token"]
-        )
-    except Exception:
-        pass
-
-# Check active session
-session = supabase.auth.get_session()
-is_logged_in = session is not None
+# Robust session check that safely handles F5 browser refreshes
+current_user = auth.get_current_user()
+is_logged_in = current_user is not None
 
 # 2. Session State Initialization
 if 'nav_page' not in st.session_state:
@@ -52,12 +41,7 @@ def go_to_signin():
     st.session_state.nav_page = "Community"
 
 def do_signout():
-    try:
-        supabase.auth.sign_out()
-    except Exception:
-        pass
-    if "supabase_session" in st.session_state:
-        del st.session_state["supabase_session"]
+    auth.sign_out()
     st.rerun()
 
 # 3. Custom Top Bar Render
@@ -69,7 +53,6 @@ with st.container(key="topbar"):
         page_keys = list(PAGES.keys())
         current_index = page_keys.index(st.session_state["nav_page"]) if st.session_state["nav_page"] in page_keys else 0
         
-        # Using index instead of a strict widget key avoids state collision errors
         selected_page = st.radio(
             "Go to", 
             page_keys, 
