@@ -2,5 +2,5 @@
 __pycache__/
 *.pyc
 .env
-#.streamlit/secrets.toml
+.streamlit/secrets.toml
 data/herhealth.db

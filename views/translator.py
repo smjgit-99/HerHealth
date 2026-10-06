@@ -136,32 +136,41 @@ def render():
 # --- Translator -> Community CTA Cards ---
     st.write("")
     st.markdown("---")
-    st.markdown("### 🌸 Take the Next Step in Your Health Journey")
-    
+    cta_h, c1t, c1b, c1btn, c2t, c2b, c2btn = tr_list([
+        "Take the Next Step in Your Health Journey",
+        "Join the HerHealth Community",
+        "Have questions about your lab results or looking for peer support? Connect with other women using an alias or anonymously.",
+        "Join Community Now",
+        "Learn More About Your Results",
+        "Browse plain-language guides to common women's health conditions, plus a glossary of medical terms.",
+        "Explore the Health Library",
+    ])
+    st.markdown(f"### 🌸 {cta_h}")
+
     col_cta1, col_cta2 = st.columns(2, gap="medium")
-    
+
     with col_cta1:
         with st.container(key="card_cta_community"):
-            st.markdown("""
+            st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #F5EEFB, #FCEFF6); padding: 20px; border-radius: 12px; border: 1px solid #EFEAF8;">
-                    <h4 style="color: #1D1B2A; margin-top: 0;">Join the HerHealth Community</h4>
-                    <p style="color: #6B6880; font-size: 0.9rem;">Have questions about your lab results or looking for empathetic peer support? Connect with others in a secure, private space.</p>
+                    <h4 style="color: #1D1B2A; margin-top: 0;">{c1t}</h4>
+                    <p style="color: #6B6880; font-size: 0.9rem;">{c1b}</p>
                 </div>
             """, unsafe_allow_html=True)
             st.write("")
-            if st.button("Join Community Now", type="primary", use_container_width=True, key="btn_cta_join_comm"):
+            if st.button(c1btn, type="primary", use_container_width=True, key="btn_cta_join_comm"):
                 st.session_state.nav_page = "Community"
                 st.rerun()
-                
+
     with col_cta2:
         with st.container(key="card_cta_signin"):
-            st.markdown("""
+            st.markdown(f"""
                 <div style="background: linear-gradient(135deg, #EEF4FD, #F1F8FD); padding: 20px; border-radius: 12px; border: 1px solid #D1E3F8;">
-                    <h4 style="color: #1D1B2A; margin-top: 0;">Save & Track Your Reports</h4>
-                    <p style="color: #6B6880; font-size: 0.9rem;">Sign in to your account to securely store your translated insights, track health trends over time, and access personalized guides.</p>
+                    <h4 style="color: #1D1B2A; margin-top: 0;">{c2t}</h4>
+                    <p style="color: #6B6880; font-size: 0.9rem;">{c2b}</p>
                 </div>
             """, unsafe_allow_html=True)
             st.write("")
-            if st.button("Sign In to Account", use_container_width=True, key="btn_cta_signin_acc"):
-                st.session_state.nav_page = "Community"
+            if st.button(c2btn, use_container_width=True, key="btn_cta_learn"):
+                st.session_state.nav_page = "Learn"
                 st.rerun()
